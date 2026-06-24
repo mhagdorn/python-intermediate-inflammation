@@ -46,6 +46,12 @@ def daily_min(data):
 def patient_normalise(data):
     """Normalise patient data from a 2D inflammation data array."""
 
+    if not isinstance(data, np.ndarray):
+        raise TypeError("expecting a ndarray")
+
+    if len(data.shape) != 2:
+        raise ValueError("expected a 2d array")
+
     if np.any(data < 0):
         raise ValueError("Inflammation values should be non-negative")
     max = np.max(data, axis=1)
