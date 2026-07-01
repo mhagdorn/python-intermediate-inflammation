@@ -6,6 +6,7 @@ import os
 
 from inflammation import models, views
 from inflammation.compute_data import analyse_data
+from inflammation.compute_data import CSVDataSource
 
 
 def main(args):
@@ -21,7 +22,7 @@ def main(args):
 
 
     if args.full_data_analysis:
-        analyse_data(os.path.dirname(infiles[0]))
+        analyse_data(CSVDataSource(os.path.dirname(infiles[0])))
         return
 
     for filename in infiles:
