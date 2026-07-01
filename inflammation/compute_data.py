@@ -14,7 +14,7 @@ class CSVDataSource:
     def load_inflammation_data(self):
         data_file_paths = glob.glob(os.path.join(self.data_dir, 'inflammation*.csv'))
         if len(data_file_paths) == 0:
-            raise ValueError(f"No inflammation data CSV files found in path {data_dir}")
+            raise ValueError(f"No inflammation data CSV files found in path {self.data_dir}")
         data = map(models.load_csv, data_file_paths)
         return data
 
@@ -26,9 +26,17 @@ class JSONDataSource:
     def load_inflammation_data(self):
         data_file_paths = glob.glob(os.path.join(self.data_dir, 'inflammation*.json'))
         if len(data_file_paths) == 0:
-            raise ValueError(f"No inflammation data JSON files found in path {data_dir}")
+            raise ValueError(f"No inflammation data JSON files found in path {self.data_dir}")
         data = map(models.load_json, data_file_paths)
         return data
+
+
+def compute_standard_deviation_by_day(data):
+    means_by_day = map(models.daily_mean, data)
+    means_by_day_matrix = np.stack(list(means_by_day))
+
+    daily_standard_deviation = np.std(means_by_day_matrix, axis=0)
+    return daily_standard_deviation
 
 
 def analyse_data(data_src):
@@ -39,13 +47,11 @@ def analyse_data(data_src):
     then plots the graphs of standard deviation of these means."""
     data = data_src.load_inflammation_data()
 
+    daily_standard_deviation = compute_standard_deviation_by_day(data)
 
-    means_by_day = map(models.daily_mean, data)
-    means_by_day_matrix = np.stack(list(means_by_day))
+    return daily_standard_deviation
 
-    daily_standard_deviation = np.std(means_by_day_matrix, axis=0)
-
-    graph_data = {
-        'standard deviation by day': daily_standard_deviation,
-    }
-    views.visualize(graph_data)
+    #graph_data = {
+    #    'standard deviation by day': daily_standard_deviation,
+    #}
+    #views.visualize(graph_data)
