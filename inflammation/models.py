@@ -52,3 +52,12 @@ def daily_min(data):
     """Calculate the daily min of a 2d inflammation data array."""
     return np.min(data, axis=0)
 
+
+def compute_standard_deviation_by_day(data):
+    means_by_day = map(daily_mean, data)
+    means_by_day_matrix = np.stack(list(means_by_day))
+
+    daily_standard_deviation = np.std(means_by_day_matrix, axis=0)
+    return daily_standard_deviation
+
+
