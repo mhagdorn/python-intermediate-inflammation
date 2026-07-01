@@ -1,7 +1,9 @@
 """Tests for statistics functions within the Model layer."""
 import pytest
 import numpy as np
+import math
 import numpy.testing as npt
+import pytest
 
 from inflammation.models import daily_mean
 from inflammation.models import daily_max
@@ -89,3 +91,17 @@ def test_patient_normalise(test, expected, expect_raises):
     else:
         result = patient_normalise(np.array(test))
         npt.assert_allclose(result, np.array(expected), rtol=1e-2, atol=1e-2)
+
+@pytest.mark.parametrize('data,expected_result', [
+    ([[[0, 1, 0], [0, 2, 0]]], [0, 0, 0]),
+    ([[[0, 2, 0]], [[0, 1, 0]]], [0, math.sqrt(0.25), 0]),
+    ([[[0, 1, 0], [0, 2, 0]], [[0, 1, 0], [0, 2, 0]]], [0, 0, 0])
+],
+ids=['Two patients in same file', 
+     'Two patients in different files', 
+     'Two identical patients in two different files'])
+def test_compute_standard_deviation_by_day(data, expected_result):
+    from inflammation.models import compute_standard_deviation_by_day
+
+    result = compute_standard_deviation_by_day(data)
+    npt.assert_almost_equal(result, expected_result)
