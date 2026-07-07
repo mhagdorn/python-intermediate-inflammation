@@ -1,3 +1,5 @@
+[![CI](https://github.com/mhagdorn/python-intermediate-inflammation/actions/workflows/main.yml/badge.svg)](https://github.com/mhagdorn/python-intermediate-inflammation/actions/workflows/main.yml)
+
 # Introduction
 
 This is a template software project repository used by the [Intermediate Research Software Development Skills In Python](https://github.com/carpentries-incubator/python-intermediate-development).
